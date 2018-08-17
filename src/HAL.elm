@@ -1,13 +1,15 @@
-module HAL exposing (Link, decode)
+module HAL exposing (Link, decodeLink, decodeLinks, emptyLink)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
 @docs Link
-@docs decode
+@docs decodeLink
+@docs decodeLinks
+@docs emptyLink
 
 -}
 
-import Json.Decode as Decode exposing (bool, nullable, string)
+import Json.Decode as Decode exposing (bool, field, nullable, string)
 import Json.Decode.Pipeline exposing (decode, optional, required)
 
 
@@ -36,15 +38,30 @@ nonnull =
         ]
 
 
+{-| A default link, whose href points to "/" and with all optional fields undefined
+-}
+emptyLink : Link
+emptyLink =
+    { href = "/"
+    , templated = Nothing
+    , mediaType = Nothing
+    , deprecation = Nothing
+    , name = Nothing
+    , profile = Nothing
+    , title = Nothing
+    , hreflang = Nothing
+    }
+
+
 {-| Decode a single Hypertext link. This will not handle the entire link set,
 so it will need to be combined with the decoder combinators.
 
 Example: { "href": "/x" }
 
 -}
-decode : Decode.Decoder Link
-decode =
-    Json.Decode.Pipeline.decode Link
+decodeLink : Decode.Decoder Link
+decodeLink =
+    decode Link
         |> required "href" string
         |> optional "templated" (nullable bool) Nothing
         |> optional "type" (nullable string) Nothing
@@ -53,3 +70,21 @@ decode =
         |> optional "profile" (nullable string) Nothing
         |> optional "title" (nullable string) Nothing
         |> optional "hreflang" (nullable string) Nothing
+
+
+{-| Decode either a single link or multiple links, so if x is a valid link,
+then this will match both x and [ x ]
+-}
+decodeLinks : Decode.Decoder (List Link)
+decodeLinks =
+    Decode.oneOf
+        [ Decode.list decodeLink
+        , Decode.map (\x -> [ x ]) decodeLink
+        ]
+
+
+decodeLinksFromObj : Decode.Decoder a -> Decode.Decoder { links : List Link, value : a }
+decodeLinksFromObj decoder =
+    Decode.map2 (\links val -> { links = links, value = val })
+        (field "_links" decodeLinks)
+        decoder
