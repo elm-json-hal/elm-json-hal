@@ -1,8 +1,8 @@
-module HAL exposing (HypertextLink, decode)
+module HAL exposing (Link, decode)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
-@docs HypertextLink
+@docs Link
 @docs decode
 
 -}
@@ -16,7 +16,7 @@ import Json.Decode.Pipeline exposing (decode, optional, required)
 A field typed with Maybe here is always an optional field
 
 -}
-type alias HypertextLink =
+type alias Link =
     { href : String
     , templated : Maybe Bool
     , mediaType : Maybe String
@@ -42,9 +42,9 @@ so it will need to be combined with the decoder combinators.
 Example: { "href": "/x" }
 
 -}
-decode : Decode.Decoder HypertextLink
+decode : Decode.Decoder Link
 decode =
-    Json.Decode.Pipeline.decode HypertextLink
+    Json.Decode.Pipeline.decode Link
         |> required "href" string
         |> optional "templated" (nullable bool) Nothing
         |> optional "type" (nullable string) Nothing
