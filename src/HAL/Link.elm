@@ -1,10 +1,10 @@
-module HAL.Link exposing (Link, decode, empty)
+module HAL.Link exposing (Link, decode, fromHref)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
 @docs Link
 @docs decode
-@docs empty
+@docs fromHref
 
 -}
 
@@ -37,11 +37,11 @@ nonnull =
         ]
 
 
-{-| A link with all optional fields left undefined, and the href field set to "/"
+{-| Creates a link given just an href, and leaving all optional fields blank.
 -}
-empty : Link
-empty =
-    { href = "/"
+fromHref : String -> Link
+fromHref href =
+    { href = href
     , templated = Nothing
     , mediaType = Nothing
     , deprecation = Nothing
@@ -54,7 +54,7 @@ empty =
 
 {-| Decode a single HAL Link.
 
-Example: The object { "href": "/x" } will be decoded to the link { empty | href = "/x" }
+Example: The object { "href": "/x" } will be decoded to the link `fromHref "/x"`
 
 -}
 decode : Decode.Decoder Link
