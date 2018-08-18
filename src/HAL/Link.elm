@@ -1,9 +1,10 @@
-module HAL.Link exposing (Link, decode, fromHref)
+module HAL.Link exposing (Link, decode, empty, fromHref)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
 @docs Link
 @docs decode
+@docs empty
 @docs fromHref
 
 -}
@@ -18,7 +19,15 @@ A field typed with Maybe here is always an optional field
 
 -}
 type alias Link =
-    { href : String
+    PartialLink String
+
+
+type Undefined
+    = Undefined
+
+
+type alias PartialLink a =
+    { href : a
     , templated : Maybe Bool
     , mediaType : Maybe String
     , deprecation : Maybe ()
@@ -37,11 +46,25 @@ nonnull =
         ]
 
 
-{-| Creates a link given just an href, and leaving all optional fields blank.
+{-|
+
+    Given just an href, constructs a Link with that href and all other fields blank
+
 -}
 fromHref : String -> Link
 fromHref href =
-    { href = href
+    { empty | href = href }
+
+
+{-|
+
+    Creates a Link with a yet-undefined href, so that it should be filled in via record updates.
+    In particular, to be consumed as a link, one should set href to be a String
+
+-}
+empty : PartialLink Undefined
+empty =
+    { href = Undefined
     , templated = Nothing
     , mediaType = Nothing
     , deprecation = Nothing
@@ -59,7 +82,7 @@ Example: The object { "href": "/x" } will be decoded to the link `fromHref "/x"`
 -}
 decode : Decode.Decoder Link
 decode =
-    Pipeline.decode Link
+    Pipeline.decode PartialLink
         |> required "href" string
         |> optional "templated" (nullable bool) Nothing
         |> optional "type" (nullable string) Nothing
