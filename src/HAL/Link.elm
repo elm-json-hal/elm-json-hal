@@ -1,8 +1,9 @@
-module HAL.Link exposing (Link, decode, empty, fromHref)
+module HAL.Link exposing (Link, LinkWithoutHref, decode, empty, fromHref)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
 @docs Link
+@docs LinkWithoutHref
 @docs decode
 @docs empty
 @docs fromHref
@@ -19,15 +20,7 @@ A field typed with Maybe here is always an optional field
 
 -}
 type alias Link =
-    PartialLink String
-
-
-type Undefined
-    = Undefined
-
-
-type alias PartialLink a =
-    { href : a
+    { href : String
     , templated : Maybe Bool
     , mediaType : Maybe String
     , deprecation : Maybe ()
@@ -36,6 +29,27 @@ type alias PartialLink a =
     , title : Maybe String
     , hreflang : Maybe String
     }
+
+
+{-|
+
+    A Link missing its mandatory href field. The field must be updated with a String value in order to construct a Link.
+
+-}
+type alias LinkWithoutHref =
+    { href : Undefined
+    , templated : Maybe Bool
+    , mediaType : Maybe String
+    , deprecation : Maybe ()
+    , name : Maybe String
+    , profile : Maybe String
+    , title : Maybe String
+    , hreflang : Maybe String
+    }
+
+
+type Undefined
+    = Undefined
 
 
 nonnull : Decode.Decoder (Maybe ())
@@ -62,7 +76,7 @@ fromHref href =
     In particular, to be consumed as a link, one should set href to be a String
 
 -}
-empty : PartialLink Undefined
+empty : LinkWithoutHref
 empty =
     { href = Undefined
     , templated = Nothing
@@ -82,7 +96,7 @@ Example: The object { "href": "/x" } will be decoded to the link `fromHref "/x"`
 -}
 decode : Decode.Decoder Link
 decode =
-    Pipeline.decode PartialLink
+    Pipeline.decode Link
         |> required "href" string
         |> optional "templated" (nullable bool) Nothing
         |> optional "type" (nullable string) Nothing
