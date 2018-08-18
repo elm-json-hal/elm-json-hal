@@ -1,19 +1,18 @@
-module HAL exposing (Link, decodeLink, decodeLinks, emptyLink)
+module HAL.Link exposing (Link, decode, empty)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
 @docs Link
-@docs decodeLink
-@docs decodeLinks
-@docs emptyLink
+@docs decode
+@docs empty
 
 -}
 
 import Json.Decode as Decode exposing (bool, field, nullable, string)
-import Json.Decode.Pipeline exposing (decode, optional, required)
+import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 
 
-{-| The type for a link object as per the specification at <https://tools.ietf.org/html/draft-kelly-json-hal-08>
+{-| The type for a HAL Link Object as per the specification at <https://tools.ietf.org/html/draft-kelly-json-hal-08>
 
 A field typed with Maybe here is always an optional field
 
@@ -38,10 +37,10 @@ nonnull =
         ]
 
 
-{-| A default link, whose href points to "/" and with all optional fields undefined
+{-| A link with all optional fields left undefined, and the href field set to "/"
 -}
-emptyLink : Link
-emptyLink =
+empty : Link
+empty =
     { href = "/"
     , templated = Nothing
     , mediaType = Nothing
@@ -53,15 +52,14 @@ emptyLink =
     }
 
 
-{-| Decode a single Hypertext link. This will not handle the entire link set,
-so it will need to be combined with the decoder combinators.
+{-| Decode a single HAL Link.
 
-Example: { "href": "/x" }
+Example: The object { "href": "/x" } will be decoded to the link { empty | href = "/x" }
 
 -}
-decodeLink : Decode.Decoder Link
-decodeLink =
-    decode Link
+decode : Decode.Decoder Link
+decode =
+    Pipeline.decode Link
         |> required "href" string
         |> optional "templated" (nullable bool) Nothing
         |> optional "type" (nullable string) Nothing
@@ -72,19 +70,9 @@ decodeLink =
         |> optional "hreflang" (nullable string) Nothing
 
 
-{-| Decode either a single link or multiple links, so if x is a valid link,
-then this will match both x and [ x ]
--}
 decodeLinks : Decode.Decoder (List Link)
 decodeLinks =
     Decode.oneOf
-        [ Decode.list decodeLink
-        , Decode.map (\x -> [ x ]) decodeLink
+        [ Decode.list decode
+        , Decode.map (\x -> [ x ]) decode
         ]
-
-
-decodeLinksFromObj : Decode.Decoder a -> Decode.Decoder { links : List Link, value : a }
-decodeLinksFromObj decoder =
-    Decode.map2 (\links val -> { links = links, value = val })
-        (field "_links" decodeLinks)
-        decoder
