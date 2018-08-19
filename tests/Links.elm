@@ -52,13 +52,23 @@ rfcCase =
      "shippedToday": 20
 }
         """
+        (dict (Decode.map (\_ -> ()) value))
         (Decode.map (\_ -> ()) value)
-        (Decode.map (\_ -> ()) value)
-        ( (), rfcDict, rfcEmbedded )
+        ( rfcDict, rfcLinks, rfcEmbedded )
 
 
-rfcDict : Links
+rfcDict : Dict String ()
 rfcDict =
+    makeDict
+        [ ( "currentlyProcessing", () )
+        , ( "shippedToday", () )
+        , ( "_links", () )
+        , ( "_embedded", () )
+        ]
+
+
+rfcLinks : Links
+rfcLinks =
     makeDict
         [ ( "self", [ Link.fromHref "/orders" ] )
         , ( "next", [ Link.fromHref "/orders?page=2" ] )
