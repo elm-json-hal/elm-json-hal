@@ -1,4 +1,4 @@
-module HAL.Links exposing (..)
+module HAL.Links exposing (Links, decodeLinks, decodeResourceObject)
 
 import Dict exposing (Dict)
 import HAL.Link as Link exposing (Link)
@@ -15,13 +15,6 @@ decodeOneOrMany dec =
         [ Decode.list dec
         , Decode.map (\x -> [ x ]) dec
         ]
-
-
-
-{-
-   field "_links" (decodeOneOrMany Link.decode)
-   field "_embedded" (embedded)
--}
 
 
 decodeMultiDict : Decoder a -> Decoder (Dict String (List a))
