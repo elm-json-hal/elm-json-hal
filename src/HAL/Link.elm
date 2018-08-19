@@ -10,7 +10,7 @@ module HAL.Link exposing (Link, LinkWithoutHref, decode, empty, fromHref)
 
 -}
 
-import Json.Decode as Decode exposing (bool, field, nullable, string)
+import Json.Decode as Decode exposing (Decoder, bool, field, nullable, string)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 
 
@@ -52,7 +52,7 @@ type Undefined
     = Undefined
 
 
-nonnull : Decode.Decoder (Maybe ())
+nonnull : Decoder (Maybe ())
 nonnull =
     Decode.oneOf
         [ Decode.null Nothing
@@ -94,7 +94,7 @@ empty =
 Example: The object { "href": "/x" } will be decoded to the link `fromHref "/x"`
 
 -}
-decode : Decode.Decoder Link
+decode : Decoder Link
 decode =
     Pipeline.decode Link
         |> required "href" string
@@ -105,11 +105,3 @@ decode =
         |> optional "profile" (nullable string) Nothing
         |> optional "title" (nullable string) Nothing
         |> optional "hreflang" (nullable string) Nothing
-
-
-decodeLinks : Decode.Decoder (List Link)
-decodeLinks =
-    Decode.oneOf
-        [ Decode.list decode
-        , Decode.map (\x -> [ x ]) decode
-        ]
