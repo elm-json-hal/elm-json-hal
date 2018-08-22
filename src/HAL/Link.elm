@@ -31,10 +31,8 @@ type alias Link =
     }
 
 
-{-|
-
-    A Link missing its mandatory href field. The field must be updated with a String value in order to construct a Link.
-
+{-| A Link missing its mandatory href field.
+The field must be updated with a String value in order to construct a Link.
 -}
 type alias LinkWithoutHref =
     { href : Undefined
@@ -91,7 +89,7 @@ empty =
 
 {-| Decode a single HAL Link.
 
-Example: The object { "href": "/x" } will be decoded to the link `fromHref "/x"`
+    `decodeString decode "{ \"href\": \"/x\" }" = Ok { href = "/x", ...}`
 
 -}
 decode : Decoder Link
