@@ -47,10 +47,18 @@ decodeLinks =
     decodeMultiDict Link.decode
 
 
+decodeLinksField : Decoder Links
+decodeLinksField =
+    Decode.field "_links" decodeLinks
+
+
 {-|
 
     Decode an entire Resource object, using a decoder for the resource, as well as a decoder for embedded resources.
     As decodeLinks, curies are not treated differently than other link objects.
+
+    You are required to supply a decoder for the main resource, as well as embedded resources.
+    Json.Decode.value can be used
 
 -}
 decodeResourceObject :
@@ -60,5 +68,19 @@ decodeResourceObject :
 decodeResourceObject res emb =
     Decode.map3 (\res links embedded -> ( res, links, embedded ))
         res
-        (Decode.field "_links" decodeLinks)
+        decodeLinksField
         (Decode.field "_embedded" (decodeMultiDict emb))
+
+
+{-|
+
+    As decodeResourceObject, but explicitly not decoding the _embedded field
+
+-}
+decodeResourceObjectNoEmbedded :
+    Decoder resource
+    -> Decoder ( resource, Links )
+decodeResourceObjectNoEmbedded res =
+    Decode.map2 (\res links -> ( res, links ))
+        res
+        decodeLinksField
