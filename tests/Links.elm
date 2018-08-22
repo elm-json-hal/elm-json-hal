@@ -13,6 +13,7 @@ suite =
     describe "The HAL.Links module"
         [ describe "decodeLinks"
             [ rfcCase
+            , noLinksCase
             ]
         ]
 
@@ -102,3 +103,15 @@ makeCase description input res emb result =
         (\_ ->
             Expect.equal (decodeString (Links.decodeResourceObject res emb) input) (Ok result)
         )
+
+
+noLinksCase : Test
+noLinksCase =
+    makeCase "Empty object"
+        """
+        {
+        }
+        """
+        (Decode.map (\_ -> ()) value)
+        (Decode.map (\_ -> ()) value)
+        ( (), Dict.empty, Dict.empty )
