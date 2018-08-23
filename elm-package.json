@@ -7,8 +7,8 @@
         "src"
     ],
     "exposed-modules": [
-        "HAL.Link",
-        "HAL.Links"
+        "Json.Hal.Link",
+        "Json.Hal.Links"
     ],
     "dependencies": {
         "elm-lang/core": "5.0.0 <= v < 6.0.0",

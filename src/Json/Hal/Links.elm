@@ -1,4 +1,4 @@
-module HAL.Links exposing (Links, decodeLinks, decodeResourceObject)
+module Json.Hal.Links exposing (Links, decodeLinks, decodeResourceObject)
 
 {-| This module exposes types and decoders for the colection of links, and HAL Resource Objects
 
@@ -9,8 +9,8 @@ module HAL.Links exposing (Links, decodeLinks, decodeResourceObject)
 -}
 
 import Dict exposing (Dict)
-import HAL.Link as Link exposing (Link)
 import Json.Decode as Decode exposing (Decoder, bool, field, nullable, string)
+import Json.Hal.Link as Link exposing (Link)
 
 
 {-|

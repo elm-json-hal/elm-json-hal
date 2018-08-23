@@ -1,4 +1,4 @@
-module HAL.Link exposing (Link, LinkWithoutHref, decode, empty, fromHref)
+module Json.Hal.Link exposing (Link, LinkWithoutHref, decode, empty, fromHref)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
