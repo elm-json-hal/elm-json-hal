@@ -49,7 +49,12 @@ decodeLinks =
 
 decodeLinksField : Decoder Links
 decodeLinksField =
-    Decode.field "_links" decodeLinks
+    optionalField Dict.empty "_links" decodeLinks
+
+
+optionalField : a -> String -> Decoder a -> Decoder a
+optionalField a name dec =
+    Decode.map (Maybe.withDefault a) (Decode.maybe (Decode.field name dec))
 
 
 {-|
@@ -69,7 +74,7 @@ decodeResourceObject res emb =
     Decode.map3 (\res links embedded -> ( res, links, embedded ))
         res
         decodeLinksField
-        (Decode.field "_embedded" (decodeMultiDict emb))
+        (optionalField Dict.empty "_embedded" (decodeMultiDict emb))
 
 
 {-|
