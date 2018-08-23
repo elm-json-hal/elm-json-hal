@@ -2,11 +2,22 @@ module HAL.Link exposing (Link, LinkWithoutHref, decode, empty, fromHref)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
+
+# Types
+
 @docs Link
 @docs LinkWithoutHref
-@docs decode
+
+
+# Constructing
+
 @docs empty
 @docs fromHref
+
+
+# Decoding
+
+@docs decode
 
 -}
 
@@ -14,7 +25,7 @@ import Json.Decode as Decode exposing (Decoder, bool, field, nullable, string)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
 
 
-{-| The type for a HAL Link Object as per the specification at <https://tools.ietf.org/html/draft-kelly-json-hal-08>
+{-| The type for a HAL Link Object
 
 A field typed with Maybe here is always an optional field
 
