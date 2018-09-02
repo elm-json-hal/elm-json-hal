@@ -2,15 +2,15 @@ module Links exposing (..)
 
 import Dict exposing (Dict)
 import Expect exposing (Expectation)
-import HAL.Link as Link exposing (empty)
-import HAL.Links as Links exposing (Links)
 import Json.Decode as Decode exposing (decodeString, dict, value)
+import Json.Hal.Link as Link exposing (empty)
+import Json.Hal.Links as Links exposing (Links)
 import Test exposing (..)
 
 
 suite : Test
 suite =
-    describe "The HAL.Links module"
+    describe "The Json.Hal.Links module"
         [ describe "decodeLinks"
             [ rfcCase
             , noLinksCase

@@ -1,14 +1,14 @@
 module Link exposing (..)
 
 import Expect exposing (Expectation)
-import HAL.Link as Link exposing (Link, empty, fromHref)
 import Json.Decode as Decode exposing (decodeString)
+import Json.Hal.Link as Link exposing (Link, empty, fromHref)
 import Test exposing (..)
 
 
 suite : Test
 suite =
-    describe "The HAL.Link module"
+    describe "The Json.Hal.Link module"
         [ describe "Link.decode"
             (List.map
                 (\( x, y, z ) -> makeCase x y z)
