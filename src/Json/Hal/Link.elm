@@ -23,18 +23,21 @@ module Json.Hal.Link exposing (Link, LinkWithoutHref, decode, empty, fromHref)
 
 import Json.Decode as Decode exposing (Decoder, bool, field, nullable, string)
 import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
+import Json.Encode exposing (Value)
 
 
 {-| The type for a HAL Link Object
 
-A field typed with Maybe here is always an optional field
+Href is the only mandatory field. All other fields are optional. In particular, templated can either
+be explicitly true, false, or not present. Likewise deprecation if present represents that the link is
+deprecated. This field includes the value so that it can be interpeted, if it is a string or other documentation.
 
 -}
 type alias Link =
     { href : String
     , templated : Maybe Bool
     , mediaType : Maybe String
-    , deprecation : Maybe ()
+    , deprecation : Maybe Value
     , name : Maybe String
     , profile : Maybe String
     , title : Maybe String
@@ -49,7 +52,7 @@ type alias LinkWithoutHref =
     { href : Undefined
     , templated : Maybe Bool
     , mediaType : Maybe String
-    , deprecation : Maybe ()
+    , deprecation : Maybe Value
     , name : Maybe String
     , profile : Maybe String
     , title : Maybe String
@@ -61,11 +64,11 @@ type Undefined
     = Undefined
 
 
-nonnull : Decoder (Maybe ())
+nonnull : Decoder (Maybe Value)
 nonnull =
     Decode.oneOf
         [ Decode.null Nothing
-        , Decode.map (\x -> Just ()) Decode.value
+        , Decode.map Just Decode.value
         ]
 
 
