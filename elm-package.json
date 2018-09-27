@@ -1,6 +1,6 @@
 {
     "version": "0.1.0",
-    "summary": "Elm JSON HAL decoders",
+    "summary": "Elm JSON HAL types and decoders",
     "repository": "https://github.com/jasoncarr0/elm-json-hal.git",
     "license": "MIT",
     "source-directories": [
