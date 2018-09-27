@@ -72,21 +72,15 @@ nonnull =
         ]
 
 
-{-|
-
-    Given just an href, constructs a Link with that href and all other fields blank
-
+{-| Given just an href, constructs a Link with that href and all other fields blank
 -}
 fromHref : String -> Link
 fromHref href =
     { empty | href = href }
 
 
-{-|
-
-    Creates a Link with a yet-undefined href, so that it should be filled in via record updates.
-    In particular, to be consumed as a link, one should set href to be a String
-
+{-| Creates a Link with a yet-undefined href, so that it should be filled in via record updates.
+In particular, to be consumed as a link, one should set href to be a String
 -}
 empty : LinkWithoutHref
 empty =
@@ -103,7 +97,7 @@ empty =
 
 {-| Decode a single HAL Link.
 
-    `decodeString decode "{ \"href\": \"/x\" }" = Ok { href = "/x", ...}`
+    decodeString decode "{ \"href\": \"/x\" }" = Ok { href = "/x", ...}
 
 -}
 decode : Decoder Link

@@ -13,10 +13,7 @@ import Json.Decode as Decode exposing (Decoder, bool, field, nullable, string)
 import Json.Hal.Link as Link exposing (Link)
 
 
-{-|
-
-    Alias for object of links, a multi-dictionary of individual Link objects
-
+{-| Alias for object of links, a multi-dictionary of individual Link objects
 -}
 type alias Links =
     Dict String (List Link)
@@ -35,11 +32,9 @@ decodeMultiDict dec =
     Decode.dict (decodeOneOrMany dec)
 
 
-{-|
+{-| Decode the links object, that is, an object containing for each key, a link object or array of link objects.
 
-    Decode the links object, that is, an object containing for each key, a link object or array of link objects.
-
-    Curies are treated as any other link object and not specifically validated.
+Curies are treated as any other link object and not specifically validated.
 
 -}
 decodeLinks : Decoder Links
@@ -57,13 +52,12 @@ optionalField a name dec =
     Decode.map (Maybe.withDefault a) (Decode.maybe (Decode.field name dec))
 
 
-{-|
+{-| Decode an entire Resource object, using a decoder for the resource, as well as a decoder for embedded resources.
 
-    Decode an entire Resource object, using a decoder for the resource, as well as a decoder for embedded resources.
-    As decodeLinks, curies are not treated differently than other link objects.
+As decodeLinks, curies are not treated differently than other link objects.
 
-    You are required to supply a decoder for the main resource, as well as embedded resources.
-    Json.Decode.value can be used
+You are required to supply a decoder for the main resource, as well as embedded resources.
+Json.Decode.value can be used
 
 -}
 decodeResourceObject :
@@ -77,10 +71,7 @@ decodeResourceObject res emb =
         (optionalField Dict.empty "_embedded" (decodeMultiDict emb))
 
 
-{-|
-
-    As decodeResourceObject, but explicitly not decoding the _embedded field
-
+{-| As decodeResourceObject, but explicitly not decoding the _embedded field
 -}
 decodeResourceObjectNoEmbedded :
     Decoder resource
