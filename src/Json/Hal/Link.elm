@@ -1,4 +1,4 @@
-module Json.Hal.Link exposing (Link, LinkWithoutHref, decode, empty, fromHref)
+module Json.Hal.Link exposing (Link, decode, fromHref)
 
 {-| This module exposes the basic type alias for links, along with a decoder for the link structure
 
@@ -21,8 +21,8 @@ module Json.Hal.Link exposing (Link, LinkWithoutHref, decode, empty, fromHref)
 
 -}
 
-import Json.Decode as Decode exposing (Decoder, bool, field, nullable, string)
-import Json.Decode.Pipeline as Pipeline exposing (decode, optional, required)
+import Json.Decode as Decode exposing (Decoder, bool, field, nullable, string, succeed)
+import Json.Decode.Pipeline as Pipeline exposing (optional, required)
 import Json.Encode exposing (Value)
 
 
@@ -45,24 +45,6 @@ type alias Link =
     }
 
 
-{-| A Link missing its mandatory href field.
-The field must be updated with a String value in order to construct a Link.
--}
-type alias LinkWithoutHref =
-    { href : Undefined
-    , templated : Maybe Bool
-    , mediaType : Maybe String
-    , deprecation : Maybe Value
-    , name : Maybe String
-    , profile : Maybe String
-    , title : Maybe String
-    , hreflang : Maybe String
-    }
-
-
-type Undefined
-    = Undefined
-
 
 nonnull : Decoder (Maybe Value)
 nonnull =
@@ -76,15 +58,7 @@ nonnull =
 -}
 fromHref : String -> Link
 fromHref href =
-    { empty | href = href }
-
-
-{-| Creates a Link with a yet-undefined href, so that it should be filled in via record updates.
-In particular, to be consumed as a link, one should set href to be a String
--}
-empty : LinkWithoutHref
-empty =
-    { href = Undefined
+    { href = href
     , templated = Nothing
     , mediaType = Nothing
     , deprecation = Nothing
@@ -102,7 +76,7 @@ empty =
 -}
 decode : Decoder Link
 decode =
-    Pipeline.decode Link
+    Decode.succeed Link
         |> required "href" string
         |> optional "templated" (nullable bool) Nothing
         |> optional "type" (nullable string) Nothing

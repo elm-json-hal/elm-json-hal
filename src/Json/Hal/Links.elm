@@ -64,9 +64,9 @@ decodeResourceObject :
     Decoder resource
     -> Decoder embedded
     -> Decoder ( resource, Links, Dict String (List embedded) )
-decodeResourceObject res emb =
+decodeResourceObject resourceDecoder emb =
     Decode.map3 (\res links embedded -> ( res, links, embedded ))
-        res
+        resourceDecoder
         decodeLinksField
         (optionalField Dict.empty "_embedded" (decodeMultiDict emb))
 
@@ -76,7 +76,7 @@ decodeResourceObject res emb =
 decodeResourceObjectNoEmbedded :
     Decoder resource
     -> Decoder ( resource, Links )
-decodeResourceObjectNoEmbedded res =
+decodeResourceObjectNoEmbedded resourceDecoder =
     Decode.map2 (\res links -> ( res, links ))
-        res
+        resourceDecoder
         decodeLinksField

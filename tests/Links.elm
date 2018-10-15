@@ -70,10 +70,13 @@ rfcDict =
 
 rfcLinks : Links
 rfcLinks =
+    let
+        ordersLink = fromHref "/orders/{?id}"
+    in
     makeDict
         [ ( "self", [ Link.fromHref "/orders" ] )
         , ( "next", [ Link.fromHref "/orders?page=2" ] )
-        , ( "find", [ { empty | href = "/orders{?id}", templated = Just True } ] )
+        , ( "find", [ { ordersLink | templated = Just True } ] )
         ]
 
 
