@@ -2,7 +2,7 @@ module Link exposing (..)
 
 import Expect exposing (Expectation)
 import Json.Decode as Decode exposing (decodeString)
-import Json.Hal.Link as Link exposing (Link, fromHref)
+import Json.Hal.Link as Link exposing (Link)
 import Test exposing (..)
 
 
@@ -48,7 +48,7 @@ makeCase description input result =
 testCases : List ( String, String, Link )
 testCases =
     let
-        ordersLink = fromHref "/orders/{?id}"
+        ordersLink = Link.fromHref "/orders{?id}"
     in
     [ ( "matches a simple path in href"
       , """
@@ -56,11 +56,11 @@ testCases =
             "href": "/x"
         }
         """
-      , fromHref "/x"
+      , Link.fromHref "/x"
       )
     , ( "just simple href"
       , """{ "href": "/orders?page=2" }"""
-      , fromHref "/orders?page=2"
+      , Link.fromHref "/orders?page=2"
       )
     , ( "simple template"
       , """ { "href": "/orders{?id}", "templated": true } """

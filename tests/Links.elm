@@ -3,7 +3,7 @@ module Links exposing (..)
 import Dict exposing (Dict)
 import Expect exposing (Expectation)
 import Json.Decode as Decode exposing (decodeString, dict, value)
-import Json.Hal.Link as Link exposing (empty)
+import Json.Hal.Link as Link exposing (Link)
 import Json.Hal.Links as Links exposing (Links)
 import Test exposing (..)
 
@@ -71,7 +71,7 @@ rfcDict =
 rfcLinks : Links
 rfcLinks =
     let
-        ordersLink = fromHref "/orders/{?id}"
+        ordersLink = Link.fromHref "/orders{?id}"
     in
     makeDict
         [ ( "self", [ Link.fromHref "/orders" ] )
